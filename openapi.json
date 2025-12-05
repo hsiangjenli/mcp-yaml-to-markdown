@@ -1,0 +1,147 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Python MCP Template",
+    "description": "A template for creating MCP-compliant FastAPI",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/create_this_is_an_demo": {
+      "post": {
+        "tags": [
+          "Template Tools"
+        ],
+        "summary": "\ud83e\udd16 This is an demo",
+        "description": "A demo markdown template",
+        "operationId": "create_this_is_an_demo_create_this_is_an_demo_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateThisIsAnDemoInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Create This Is An Demo Create This Is An Demo Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateThisIsAnDemoInput": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "Issue title"
+          },
+          "current_behavior": {
+            "type": "string",
+            "title": "Current Behavior",
+            "description": "Current Behavior: A concise description of what you're experiencing."
+          },
+          "expected_behavior": {
+            "type": "string",
+            "title": "Expected Behavior",
+            "description": "Expected Behavior: A concise description of what you expected to happen."
+          },
+          "steps_to_reproduce": {
+            "type": "string",
+            "title": "Steps To Reproduce",
+            "description": "Steps To Reproduce\n\nExample:\nsteps to reproduce the behavior:\n1. In this environment...\n1. With this config...\n1. Run '...'\n1. See error..."
+          },
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "description": "Environment\n\nExample:\n- OS: Ubuntu 20.04\n- Node: 13.14.0\n- npm: 7.6.3"
+          },
+          "anything_else": {
+            "type": "string",
+            "title": "Anything Else",
+            "description": "Anything else: Links? References? Anything that will give us more context about the issue that you are encountering!"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "current_behavior",
+          "expected_behavior",
+          "steps_to_reproduce",
+          "environment",
+          "anything_else"
+        ],
+        "title": "CreateThisIsAnDemoInput"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
