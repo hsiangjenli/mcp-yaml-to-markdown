@@ -14,4 +14,4 @@ ENV UV_PROJECT_ENVIRONMENT=/workspace/.venv \
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
 
-CMD ["uv", "run", "fastmcp", "run", "mcp_tools/main.py", "--transport", "stdio"]
+CMD ["uv", "run", "uvicorn", "mcp_tools.main:starlette_app", "--host", "0.0.0.0", "--port", "8000"]

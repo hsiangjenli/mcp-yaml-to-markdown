@@ -28,13 +28,13 @@ This template leverages **fastmcp** and **FastAPI** to seamlessly integrate MCP 
 
 2. Run the MCP server:
   ```bash
-  # stdio
-  uv run --with fastmcp fastmcp run mcp_tools/main.py
+  # HTTP (recommended)
+  uv run uvicorn mcp_tools.main:starlette_app --host 127.0.0.1 --port 8000
   ```
 
   ```bash
-  # http
-  uv run --with fastmcp fastmcp run mcp_tools/main.py --transport http
+  # stdio
+  uv run --with fastmcp fastmcp run mcp_tools/main.py
   ```
 
 ### Docker
@@ -44,12 +44,21 @@ This template leverages **fastmcp** and **FastAPI** to seamlessly integrate MCP 
    docker build -t python-mcp-template:latest .
    ```
 
-2. Run the container:
+2. Run the container with custom templates:
    ```bash
+   # Mount your templates directory
+   docker run -i --rm -p 8000:8000 \
+     -v /path/to/your/templates:/app/templates \
+     -e MCP_TEMPLATES_DIR=/app/templates \
+     python-mcp-template:latest
+   ```
+
+   ```bash
+   # Or use the default templates
    docker run -i --rm -p 8000:8000 python-mcp-template:latest
    ```
 
-3. Run MCP Server:
+3. MCP Server configuration:
   ```json
   {
     "mcpServers": {
@@ -61,12 +70,24 @@ This template leverages **fastmcp** and **FastAPI** to seamlessly integrate MCP 
           "-i",
           "-p",
           "8000:8000",
+          "-v",
+          "/path/to/your/templates:/app/templates",
+          "-e",
+          "MCP_TEMPLATES_DIR=/app/templates",
           "python-mcp-template:latest"
         ]
       }
     }
   }
   ```
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MCP_TITLE` | `Python MCP Template` | Title of the MCP server |
+| `MCP_DESCRIPTION` | `A template for creating MCP-compliant FastAPI` | Description of the MCP server |
+| `MCP_TEMPLATES_DIR` | `.github/ISSUE_TEMPLATE` | Directory containing markdown templates |
 
 ## 📚 Documentation
 
