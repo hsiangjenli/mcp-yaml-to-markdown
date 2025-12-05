@@ -1,19 +1,33 @@
 from fastapi import FastAPI
 from fastmcp import FastMCP
-from mcp_tools.schemas import NewEndpointRequest, NewEndpointResponse
+import os
+
+TITLE = os.getenv("MCP_TITLE", "Python MCP Template")
+DESCRIPTION = os.getenv(
+    "MCP_DESCRIPTION", "A template for creating MCP-compliant FastAPI"
+)
 
 app = FastAPI(
-    title="Python MCP Template",
-    description="A template for creating MCP-compliant FastAPI services.",
-    version="0.1.0",
+    title=TITLE,
+    description=DESCRIPTION,
 )
 
 
-@app.post(
-    "/new/endpoint/", operation_id="new_endpoint", response_model=NewEndpointResponse
-)
-async def new_endpoint(request: NewEndpointRequest):
-    return {"message": f"Hello, {request.name}!"}
+@app.post("new_endpoint")
+async def new_endpoint(name: str):
+    """
+
+    Parameters
+    ----------
+    name : str
+        _description_
+
+    Returns
+    -------
+    _type_
+        _description_
+    """
+    return {"message": "This is a new endpoint!"}
 
 
 mcp = FastMCP.from_fastapi(app=app)
