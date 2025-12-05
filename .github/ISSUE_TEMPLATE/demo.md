@@ -1,8 +1,8 @@
 ---
-name: 🐞 Bug
-about: File a bug/issue
-title: '[BUG] <title>'
-labels: Bug, Needs Triage
+name: 🤖 This is an demo
+about: A demo markdown template
+title: '[Demo] <title>'
+labels: demo, markdown, template
 assignees: ''
 
 ---

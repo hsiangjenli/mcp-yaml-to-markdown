@@ -11,10 +11,10 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - 
-        name: "Set up Python"
-        uses: actions/setup-python@v6
+        name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version-file: ".python-version"
       - 
@@ -22,22 +22,19 @@ jobs:
         uses: astral-sh/setup-uv@v6
       - 
         name: Copy README.md to docs/index.md
-        run: |
-          cp README.md docs/index.md
+        run: cp README.md docs/index.md
       - 
         name: Install the project
-        run: uv sync --locked --all-extras --dev
+        run: uv sync --locked --all-extras --group dev
       - 
-        name: Generate Documentation from OpenAPI Spec
-        run: |
-          ./scripts/build_docs.sh
+        name: Generate OpenAPI documentation
+        run: ./scripts/build_docs.sh
       -
-        name: Build documentation
-        run: |
-          uv run mkdocs build
+        name: Build MkDocs site
+        run: uv run mkdocs build
       -
         name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site

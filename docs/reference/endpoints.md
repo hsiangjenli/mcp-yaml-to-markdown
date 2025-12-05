@@ -1,19 +1,21 @@
 # API Endpoints
 Version: 0.1.0
-A template for creating MCP-compliant FastAPI services.
+A template for creating MCP-compliant FastAPI
 
-## /new/endpoint/
+## /create_this_is_an_demo
 
 ### POST
 
-**Summary:** New Endpoint
+**Summary:** 🤖 This is an demo
+
+**Description:** A demo markdown template
 
 **Request Body:**
 
 Content-Type: `application/json`
 
 Schema:
-[NewEndpointRequest](models.md#newendpointrequest)
+[CreateThisIsAnDemoInput](models.md#createthisisandemoinput)
 
 **Responses:**
 
@@ -22,7 +24,7 @@ Schema:
 Content-Type: `application/json`
 
 Schema:
-[NewEndpointResponse](models.md#newendpointresponse)
+string
 
 **422**: Validation Error
 
