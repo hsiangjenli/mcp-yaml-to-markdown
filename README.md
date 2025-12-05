@@ -4,18 +4,36 @@
 
 </div>
 
-> A DevOps-friendly template with CI/CD, Docker, and Documentation-as-Code (DaC) for building MCP server
+> A DevOps-friendly template for building MCP servers from markdown templates
 
 ## 🚀 Core Idea
 
-This template leverages **fastmcp** and **FastAPI** to seamlessly integrate MCP functionality while inheriting the original OpenAPI specifications.
+Transform markdown templates (like GitHub Issue templates) into MCP tools automatically. Write a template once, get both a FastAPI endpoint and an MCP tool.
+
+## 🏗️ Architecture
+
+```
+mcp_tools/
+├── models.py      # Data models (Template, TemplateVariable)
+├── loader.py      # Load templates from files, directories, URLs
+├── parser.py      # Extract variables & render with Jinja2
+├── generator.py   # Create FastAPI endpoints dynamically
+└── server.py      # FastMCP server with CORS
+```
+
+**How it works:**
+1. **Load** - Fetch templates from local files, directories, or URLs
+2. **Parse** - Extract `<variables>` and metadata from YAML frontmatter
+3. **Generate** - Create typed FastAPI endpoints with Pydantic models
+4. **Serve** - Expose as both REST API (`/api/docs`) and MCP tools (`/mcp`)
 
 ## 🌟 Features
 
-- **CI/CD Integration**: Automate your workflows with GitHub Actions.
-- **Dockerized Environment**: Consistent and portable development and production environments.
-- **Documentation-as-Code**: Automatically generate and deploy documentation using MkDocs. This process also utilizes the `openapi.json` file to ensure API documentation is up-to-date.
-- **FastAPI Integration**: Build robust APIs with OpenAPI support.
+- **Auto-generate MCP tools** from markdown templates
+- **Multiple sources** - Load from local files, directories, or URLs
+- **Swagger UI** - Test endpoints at `/api/docs`
+- **Docker ready** - Production-ready container setup
+- **CI/CD** - GitHub Actions for automated workflows
 
 ## 🛠️ Getting Started
 
@@ -28,20 +46,14 @@ This template leverages **fastmcp** and **FastAPI** to seamlessly integrate MCP 
 
 2. Run the MCP server:
   ```bash
-  # HTTP (recommended)
   uv run uvicorn mcp_tools.main:starlette_app --host 127.0.0.1 --port 8000
-  ```
-
-  ```bash
-  # stdio
-  uv run --with fastmcp fastmcp run mcp_tools/main.py
   ```
 
 ### Docker
 
 1. Build the Docker image:
    ```bash
-   docker build -t python-mcp-template:latest .
+   docker build -t mcp-markdown-template:latest .
    ```
 
 2. Run the container with various template sources:
@@ -51,14 +63,14 @@ This template leverages **fastmcp** and **FastAPI** to seamlessly integrate MCP 
    docker run -i --rm -p 8000:8000 \
      -v /path/to/your/templates:/app/templates \
      -e MCP_TEMPLATES_SOURCE=/app/templates \
-     python-mcp-template:latest
+     mcp-markdown-template:latest
    ```
 
    ```bash
    # Load from URL (GitHub raw URL)
    docker run -i --rm -p 8000:8000 \
      -e MCP_TEMPLATES_SOURCE=https://raw.githubusercontent.com/hsiangjenli/mcp-yaml-to-markdown/refs/heads/main/.github/ISSUE_TEMPLATE/demo.md \
-     python-mcp-template:latest
+     mcp-markdown-template:latest
    ```
 
    ```bash
@@ -66,25 +78,15 @@ This template leverages **fastmcp** and **FastAPI** to seamlessly integrate MCP 
    docker run -i --rm -p 8000:8000 \
      -e MCP_TEMPLATES_SOURCE="/app/templates,https://raw.githubusercontent.com/owner/repo/main/template.md" \
      -v /path/to/local/templates:/app/templates \
-     python-mcp-template:latest
+     mcp-markdown-template:latest
    ```
 
-3. MCP Server configuration:
+3. MCP Server configuration (for Claude Desktop, etc.):
   ```json
   {
     "mcpServers": {
-      "python-mcp-template": {
-        "command": "docker",
-        "args": [
-          "run",
-          "--rm",
-          "-i",
-          "-p",
-          "8000:8000",
-          "-e",
-          "MCP_TEMPLATES_SOURCE=owner/repo",
-          "python-mcp-template:latest"
-        ]
+      "mcp-markdown-template": {
+        "url": "http://localhost:8000/mcp"
       }
     }
   }
@@ -92,30 +94,25 @@ This template leverages **fastmcp** and **FastAPI** to seamlessly integrate MCP 
 
 ### Template Sources
 
-The `MCP_TEMPLATES_SOURCE` environment variable supports multiple formats:
-
-| Format | Example | Description |
-|--------|---------|-------------|
-| Local directory | `/path/to/templates/` | Load all `.md` files from directory |
-| Local file | `/path/to/template.md` | Load a single template file |
-| URL | `https://raw.githubusercontent.com/.../template.md` | Load template from any URL |
-| Multiple sources | `source1,source2` | Comma-separated, load from multiple sources |
+| Format | Example |
+|--------|---------|
+| Local directory | `/path/to/templates/` |
+| Local file | `/path/to/template.md` |
+| URL | `https://raw.githubusercontent.com/.../template.md` |
+| Multiple | `source1,source2` (comma-separated) |
 
 ### Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `MCP_TITLE` | `Python MCP Template` | Title of the MCP server |
-| `MCP_DESCRIPTION` | `A template for creating MCP-compliant FastAPI` | Description of the MCP server |
-| `MCP_TEMPLATES_SOURCE` | `.github/ISSUE_TEMPLATE` | Template source(s) - supports multiple formats |
+| Variable | Default |
+|----------|---------|
+| `MCP_TITLE` | `Python MCP Template` |
+| `MCP_DESCRIPTION` | `A template for creating MCP-compliant FastAPI` |
+| `MCP_TEMPLATES_SOURCE` | `.github/ISSUE_TEMPLATE` |
 
 ## 📚 Documentation
 
-- Documentation is built using MkDocs and deployed to GitHub Pages.
-- To build the documentation locally:
-  
-  ```bash
-  chmod +x scripts/build_docs.sh
-  scripts/build_docs.sh
-  mkdocs build
-  ```
+Build docs locally:
+
+```bash
+scripts/build_docs.sh && mkdocs build
+```
